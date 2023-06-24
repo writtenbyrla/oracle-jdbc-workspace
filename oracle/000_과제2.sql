@@ -83,9 +83,12 @@ GROUP BY SUBSTR(TERM_NO, 1, 4)
 ORDER BY 1;
 
 -- 13. 학과 별 휴학생 수
-SELECT DEPARTMENT_NO "학과코드명", COUNT(*)
+SELECT DEPARTMENT_NO "학과코드명",
+    COUNT(CASE WHEN ABSENCE_YN = 'Y'
+                THEN 1
+                ELSE NULL
+                END ) "휴학생 수"
 FROM TB_STUDENT
-WHERE ABSENCE_YN = 'Y'
 GROUP BY DEPARTMENT_NO
 ORDER BY 1;
 
