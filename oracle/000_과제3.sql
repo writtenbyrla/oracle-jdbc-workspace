@@ -12,7 +12,8 @@ ORDER BY STUDENT_SSN DESC;
 -- 3. 주소지가 강원도나 경기도, 1900년대 학번을 가진 학생 (이름 오름차순 정렬)
 SELECT STUDENT_NAME "학생이름", STUDENT_NO "학번", STUDENT_ADDRESS "거주지 주소"
 FROM TB_STUDENT
-WHERE STUDENT_ADDRESS LIKE ('강원%') OR  STUDENT_ADDRESS LIKE ('경기도%')
+WHERE (STUDENT_ADDRESS LIKE ('강원%') OR  STUDENT_ADDRESS LIKE ('경기도%'))
+    AND SUBSTR(STUDENT_NO,1,1)='9'
 ORDER BY STUDENT_NAME;
 
 -- 4. 법학과 교수 중 나이 내림차순
@@ -125,12 +126,12 @@ JOIN TB_GRADE G ON (S.STUDENT_NO = G.STUDENT_NO)
 JOIN TB_DEPARTMENT D ON (S.DEPARTMENT_NO = D.DEPARTMENT_NO)
 WHERE DEPARTMENT_NAME = '국어국문학과'
 GROUP BY S.STUDENT_NO, S.STUDENT_NAME
-HAVING TO_CHAR(ROUND(AVG(NVL(POINT,0)),1), '9.9') = (SELECT MAX(TO_CHAR(ROUND(AVG(NVL(POINT,0)),1), '9.9'))
-                                                    FROM TB_STUDENT S
-                                                    JOIN TB_GRADE G ON (S.STUDENT_NO = G.STUDENT_NO)
-                                                    JOIN TB_DEPARTMENT D ON (S.DEPARTMENT_NO = D.DEPARTMENT_NO)
-                                                    WHERE DEPARTMENT_NAME = '국어국문학과'
-                                                    GROUP BY S.STUDENT_NO, S.STUDENT_NAME);
+HAVING (AVG(NVL(POINT,0))) = (SELECT MAX(AVG(NVL(POINT,0)))
+                              FROM TB_STUDENT S
+                              JOIN TB_GRADE G ON (S.STUDENT_NO = G.STUDENT_NO)
+                              JOIN TB_DEPARTMENT D ON (S.DEPARTMENT_NO = D.DEPARTMENT_NO)
+                             WHERE DEPARTMENT_NAME = '국어국문학과'
+                             GROUP BY S.STUDENT_NO, S.STUDENT_NAME);
                                                     
 -- 18. 환경조경학과가 속한 같은 계열 학과들의 학과 별 전공과목 평점
 SELECT D.DEPARTMENT_NAME "계열 학과명", TO_CHAR(ROUND(AVG(NVL(POINT,0)),1), '9.9')"전공 평점"
