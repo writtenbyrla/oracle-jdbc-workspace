@@ -1,0 +1,22 @@
+-- 1. 보너스 포함한 연봉이 높은 5명의 사번, 이름, 부서명, 직급, 입사일, 순위
+SELECT EMP_ID, EMP_NAME, DEPT_TITLE, JOB_NAME, HIRE_DATE, RANK "순위"
+FROM (SELECT EMP_ID, EMP_NAME, DEPT_TITLE, JOB_NAME, HIRE_DATE,
+        RANK() OVER(ORDER BY (SALARY+SALARY*NVL(BONUS,0))*12 DESC) "RANK"
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+JOIN JOB USING (JOB_CODE))
+WHERE RANK <= 5;
+
+-- 2. 부서별 급여 합계가 전체 급여 총 합의 20%보다 많은 부서의 부서명, 부서별 급여 합계 조회
+SELECT DEPT_TITLE, SUM(SALARY) 
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+GROUP BY DEPT_TITLE 
+HAVING SUM(SALARY) > (SELECT SUM(SALARY)*0.2
+                        FROM EMPLOYEE);
+                        
+-- 3. WITH를 이용하여 급여 합과 급여 평균 조회
+WITH A AS(SELECT SUM(SALARY)"급여 합", AVG(NVL(SALARY, 0))"급여 평균"
+            FROM EMPLOYEE)
+SELECT "급여 합", "급여 평균"
+FROM A;
