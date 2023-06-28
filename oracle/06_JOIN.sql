@@ -76,6 +76,7 @@
  SELECT EMP_ID, EMP_NAME, JOB_CODE, JOB_NAME
  FROM EMPLOYEE
  NATURAL JOIN JOB; 
+
  
  -- 직급이 대리인 사원의 사번, 이름, 직급명, 급여를 조회
  -- 오라클 구문 (AND 사용시 JOIN 먼저 써야함 순서 중요)
