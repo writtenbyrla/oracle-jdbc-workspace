@@ -47,19 +47,21 @@ public class MemberController {
 	}
 	
 	public boolean changePassword(String id, String oldPw, String newPw) {
-		
+
 		Member m = new Member();
 		m.setId(id);
 		m.setPassword(oldPw);
 		// 로그인 했을 때 null이 아닌 경우
 		// 비밀번호 변경 후 true 반환, 아니라면 false 반환
-		if(login(id, oldPw)!=null) {
-			try {
-				dao.updatePassword(new Member(m.getId(), newPw, m.getName()));
+		try {
+			if(login(id, oldPw)!=null) {
+				m.setPassword(newPw);
+				dao.updatePassword(m);
+//				dao.updatePassword(new Member(m.getId(), newPw, m.getName()));
 				return true;
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+		}catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -70,7 +72,7 @@ public class MemberController {
 		m.setName(name);
 		// 이름 변경!
 		try {
-			dao.updateName(new Member(m.getId(), m.getPassword(), name));
+			dao.updateName(m);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
