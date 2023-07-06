@@ -58,14 +58,15 @@ public class BookDAO implements BookDAOTemplate {
 		
 		ResultSet rs = st.executeQuery();
 		
-		ArrayList<Book> book = null;
+		ArrayList<Book> bookList = new ArrayList<>();
 		
 		while(rs.next()) {
-			book.add(new Book(rs.getInt("bk_no"), rs.getString("bk_title"), rs.getString("bk_author")));		
+			bookList.add(new Book(rs.getInt("bk_no"), rs.getString("bk_title"), rs.getString("bk_author")));		
 		}
 		
 		closeAll(rs, st,conn);
-		return book;
+		
+		return bookList;
 	}
 
 	// 책 등록
@@ -94,11 +95,12 @@ public class BookDAO implements BookDAOTemplate {
 		
 		st.setInt(1, no);
 		
-		st.executeUpdate();
+		int result = st.executeUpdate();
 		
 		closeAll(st, conn);
 		
-		return 0;
+		// 반환값 타입이 int인 경우 st.executeUpdate() 때문
+		return result;
 	}
 
 	// 회원가입
@@ -107,14 +109,14 @@ public class BookDAO implements BookDAOTemplate {
 		PreparedStatement st = conn.prepareStatement(p.getProperty("registerMember"));
 
 		st.setString(1, member.getMemberId());
-		st.setString(2, member.getMemberPw());
+		st.setString(2, member.getMemberPwd());
 		st.setString(3, member.getMemberName());
 
-		st.executeUpdate();
+		int result = st.executeUpdate();
 
 		closeAll(st, conn);
 
-		return 0;
+		return result;
 	}
 
 	// 로그인
@@ -129,13 +131,20 @@ public class BookDAO implements BookDAOTemplate {
 		st.setString(2, password);
 		
 		ResultSet rs = st.executeQuery();
-
-		Member m = null;
+		Member member = null;
+		
 		if(rs.next()) {
-			m=new Member(rs.getString("member_id"), rs.getString("member_pwd"), rs.getString("member_name"));
-		} 
+		member = new Member();
+		member.setMemberNo(rs.getInt("member_no"));
+		member.setMemberId(rs.getString("member_id"));
+		member.setMemberPwd(rs.getString("member_pwd"));
+		member.setMemberName(rs.getString("member_name"));
+		member.setStatus(rs.getString("status").charAt(0));
+		member.setEnrollDate(rs.getDate("enroll_date"));
+		}
+
 		closeAll(rs, st, conn);
-		return m;
+		return member;
 	}
 		
 
@@ -150,25 +159,32 @@ public class BookDAO implements BookDAOTemplate {
 		st.setString(1, id);
 		st.setString(2, password);
 		
-		st.executeUpdate();
+		int result = st.executeUpdate();
 
 		closeAll(st, conn);
 
-		return 0;
+		return result;
 	}
 
+	
 	// 책 대여
 	public int rentBook(Rent rent) throws SQLException {
 		Connection conn = getConnect();
-		PreparedStatement st = conn.prepareStatement(p.getProperty("registerMember"));
-
-		st.executeUpdate();
+		
+		PreparedStatement st = conn.prepareStatement(p.getProperty("rentBook"));
+		
+		st.setInt(1, rent.getMember().getMemberNo());
+		
+		
+		st.setInt(2, rent.getBook().getBkNo());
+		
+		
+		
+		int result = st.executeUpdate();
 
 		closeAll(st, conn);
 
-		
-
-		return 0;
+		return result;
 	}
 
 	// 대여 취소
@@ -178,9 +194,10 @@ public class BookDAO implements BookDAOTemplate {
 		
 		st.setInt(1, no);
 
+		int result = st.executeUpdate();
 		closeAll(st, conn);
 
-		return 0;
+		return result;
 	}
 
 	// 내가 대여한 책 조회
@@ -196,14 +213,19 @@ public class BookDAO implements BookDAOTemplate {
 		
 		ResultSet rs = st.executeQuery();
 		
+		ArrayList<Rent> rentList = new ArrayList<>();
+		
+		
 		while(rs.next()){
 			Rent rent = new Rent();
+			rent.setRentNo(rs.getInt("rent_no"));
+			rent.setRentDate(rs.getDate("rent_date"));
 			rent.setBook(new Book(rs.getString("bk_title"), rs.getString("bk_author")));
-			
+			rentList.add(rent);
 		}
 		
 		closeAll(rs, st,conn);
-		return null;
+		return rentList;
 	}
 
 }

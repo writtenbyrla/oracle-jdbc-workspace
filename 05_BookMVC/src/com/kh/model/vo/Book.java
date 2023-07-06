@@ -7,12 +7,19 @@ public class Book {
 	
 	public Book() {}
 
-	public Book(String title, String author) {}
+	public Book(String title, String author) {
+		this.bkTitle = title;
+		this.bkAuthor = author;
+	}
 
 	public Book(int bkNo, String bkTitle, String bkAuthor) {
 		this.bkNo = bkNo;
 		this.bkTitle = bkTitle;
 		this.bkAuthor = bkAuthor;
+	}
+
+	public Book(int no) {
+		this.bkNo = no;
 	}
 
 	public int getBkNo() {

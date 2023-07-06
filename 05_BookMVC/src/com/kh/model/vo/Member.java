@@ -6,22 +6,27 @@ public class Member {
 	
 	private int memberNo;
 	private String memberId;
-	private String memberPw;
+	private String memberPwd;
 	private String memberName;
 	private char status;
 	private Date enrollDate;
 	
-	public Member() {
-	}
+	public Member() {}
 	
 	public Member(String id, String password, String name) {
+		this.memberId = id;
+		this.memberPwd = password;
+		this.memberName = name;
+	}
+	
+	public Member(int memberNo) {
+		this.memberNo = memberNo;
 	}
 
 	public Member(int memberNo, String memberId, String memberPw, String memberName, char status, Date enrollDate) {
-		super();
 		this.memberNo = memberNo;
 		this.memberId = memberId;
-		this.memberPw = memberPw;
+		this.memberPwd = memberPw;
 		this.memberName = memberName;
 		this.status = status;
 		this.enrollDate = enrollDate;
@@ -43,12 +48,12 @@ public class Member {
 		this.memberId = memberId;
 	}
 
-	public String getMemberPw() {
-		return memberPw;
+	public String getMemberPwd() {
+		return memberPwd;
 	}
 
-	public void setMemberPw(String memberPw) {
-		this.memberPw = memberPw;
+	public void setMemberPwd(String memberPw) {
+		this.memberPwd = memberPw;
 	}
 
 	public String getMemberName() {
@@ -77,7 +82,7 @@ public class Member {
 
 	@Override
 	public String toString() {
-		return "Member [memberNo=" + memberNo + ", memberId=" + memberId + ", memberPw=" + memberPw + ", memberName="
+		return "Member [memberNo=" + memberNo + ", memberId=" + memberId + ", memberPw=" + memberPwd + ", memberName="
 				+ memberName + ", status=" + status + ", enrollDate=" + enrollDate + "]";
 	}
 	
