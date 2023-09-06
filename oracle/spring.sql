@@ -14,8 +14,9 @@ CREATE TABLE BOARD(
     WRITER VARCHAR2(50) NOT NULL,
     REGDATE DATE DEFAULT SYSDATE
 );
+ALTER TABLE board ADD url VARCHAR(200);
 
-SELECT * FROM BOARD;
+SELECT * FROM BOARD order by no desc;
 
 INSERT INTO board(no, title, content, writer) 
 (SELECT SEQ_BOARD.NEXTVAL, title, content, writer FROM board);
